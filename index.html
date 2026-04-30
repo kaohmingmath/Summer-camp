@@ -2,7 +2,8 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 🚨 Apple 防跑版關鍵：鎖定縮放、貼合螢幕安全區 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>億想世界交易所 (Demo版)</title>
     <style>
         :root { 
@@ -11,20 +12,31 @@
             --up: #ff3b30; --down: #4cd964;
         }
         * { box-sizing: border-box; }
-        body { font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif; background: var(--bg-deep); color: #fff; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* 防止 iOS 彈性滑動造成的整體頁面位移 */
+        body { 
+            font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif; 
+            background: var(--bg-deep); color: #fff; margin: 0; 
+            display: flex; height: 100vh; overflow: hidden; 
+            position: fixed; width: 100%; 
+        }
         
         /* 視圖控制：只顯示帶有 active 的 view */
         .view { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; }
         .view.active { display: flex; }
         
         /* ==========================================
-           1. 設定畫面 (Setup View) - 優化響應式排版與防跑版
+           1. 設定畫面 (Setup View) - iOS / Apple 終極防跑版
            ========================================== */
+        #view-setup.active { display: block; /* 覆蓋預設的 flex，避免高度不足時發生擠壓變形 */ }
         #view-setup { 
             background: radial-gradient(circle at center, #110022 0%, #020202 100%); 
-            flex-direction: column; align-items: center; justify-content: flex-start; z-index: 600; 
-            padding: 40px 20px; overflow-y: auto; 
+            z-index: 600; 
+            padding: 10px 20px; 
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch; /* 啟動 iOS 流暢捲動 */
         }
+        
         .setup-box { 
             background: rgba(10, 5, 20, 0.85); 
             padding: 30px; 
@@ -32,9 +44,9 @@
             width: 100%; max-width: 650px; 
             box-shadow: 0 0 20px var(--accent-blue), inset 0 0 20px var(--accent-blue); 
             animation: neonBoxPulse 4s infinite alternate; backdrop-filter: blur(5px); 
-            margin: auto; 
-            flex-shrink: 0; /* 關鍵：防止平板/手機上因高度不足導致按鈕被壓縮變形 */
+            margin: 5vh auto; /* 自動上下留白並左右置中 */
         }
+        
         .setup-box::-webkit-scrollbar { width: 6px; }
         .setup-box::-webkit-scrollbar-track { background: transparent; }
         .setup-box::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 3px; }
@@ -93,8 +105,8 @@
 
         /* 針對平板/手機的優化 */
         @media (max-width: 768px) {
-            #view-setup { padding: 20px 10px; }
-            .setup-box { padding: 20px 15px; }
+            #view-setup { padding: 10px; }
+            .setup-box { padding: 20px 15px; margin: 2vh auto; }
             .setup-title { font-size: 1.8em; margin-bottom: 10px; }
             .highlight-yi { font-size: 1.3em; }
             .opt-btn { font-size: 0.85em; padding: 6px 8px; }
@@ -788,7 +800,7 @@ function animateNews() {
     
     if (isTyping) { charIndex += 3; if (charIndex >= allText.length) { charIndex = allText.length; isTyping = false; } }
 
-    const blocks = allText.substring(0, Math.floor(charIndex)).split('\n\n');
+    const blocks = allText.substring(0, Math.floor(charIndex)).split("\n\n");
     let startY = nh * 0.28; 
     const maxW = nw * 0.75; 
     const startX = nw * 0.15; 
