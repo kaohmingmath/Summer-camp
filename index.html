@@ -28,13 +28,13 @@
         /* ==========================================
            1. 設定畫面 (Setup View) - iOS / Apple 終極防跑版
            ========================================== */
-        #view-setup.active { display: block; /* 覆蓋預設的 flex，避免高度不足時發生擠壓變形 */ }
+        #view-setup.active { display: block; }
         #view-setup { 
             background: radial-gradient(circle at center, #110022 0%, #020202 100%); 
             z-index: 600; 
             padding: 10px 20px; 
             overflow-y: auto; 
-            -webkit-overflow-scrolling: touch; /* 啟動 iOS 流暢捲動 */
+            -webkit-overflow-scrolling: touch; 
         }
         
         .setup-box { 
@@ -44,7 +44,7 @@
             width: 100%; max-width: 650px; 
             box-shadow: 0 0 20px var(--accent-blue), inset 0 0 20px var(--accent-blue); 
             animation: neonBoxPulse 4s infinite alternate; backdrop-filter: blur(5px); 
-            margin: 5vh auto; /* 自動上下留白並左右置中 */
+            margin: 5vh auto; 
         }
         
         .setup-box::-webkit-scrollbar { width: 6px; }
@@ -55,30 +55,22 @@
         
         .setup-title { color: #fff; text-align: center; margin-top:0; margin-bottom: 15px; font-size: 2.2em; letter-spacing: 2px; font-weight: bold; }
         
-        /* 「億」字專屬特效：放大、稍微斜擺、特殊發光配色 */
+        /* 「億」字專屬特效 */
         .highlight-yi {
             display: inline-block;
-            color: #ffffff; /* 核心白字 */
-            font-size: 1.5em; /* 放大 */
-            transform: rotate(-8deg) translateY(-4px); /* 斜擺與上浮 */
+            color: #ffffff;
+            font-size: 1.5em;
+            transform: rotate(-8deg) translateY(-4px);
             margin: 0 6px;
             animation: yiFlicker 3s infinite alternate;
         }
         @keyframes yiFlicker { 
             0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { 
-                text-shadow: 
-                    0 0 5px #fff, 
-                    0 0 15px #00f2fe, 
-                    0 0 30px #00f2fe, 
-                    0 0 50px #c266ff, 
-                    0 0 80px #c266ff; 
-                opacity: 1; 
-                color: #fff;
+                text-shadow: 0 0 5px #fff, 0 0 15px #00f2fe, 0 0 30px #00f2fe, 0 0 50px #c266ff, 0 0 80px #c266ff; 
+                opacity: 1; color: #fff;
             } 
             20%, 24%, 55% { 
-                text-shadow: 0 0 5px rgba(0, 242, 254, 0.3); 
-                opacity: 0.8; 
-                color: #ccc;
+                text-shadow: 0 0 5px rgba(0, 242, 254, 0.3); opacity: 0.8; color: #ccc;
             } 
         }
 
@@ -115,23 +107,35 @@
         }
 
         /* ==========================================
-           2. 時代頭條 (News View)
+           2. 時代頭條 (News View) - 防跑版大升級
            ========================================== */
         #view-news { background-color: #020202; flex-direction: column; }
         #newsCanvas { display: block; width: 100%; height: 100%; position: absolute; top:0; left:0; }
-        #titleOverlay { position: absolute; top: 20px; width: 100%; text-align: center; color: #00f2fe; font-size: 2rem; font-weight: bold; letter-spacing: 5px; text-shadow: 0 0 15px rgba(0, 242, 254, 0.6); pointer-events: none; z-index: 20; }
         
-        /* 修改為右上方按鈕 */
+        /* 標題加上 padding 避免被按鈕遮擋 */
+        #titleOverlay { 
+            position: absolute; top: 25px; left: 0; width: 100%; text-align: center; 
+            color: #00f2fe; font-size: 2rem; font-weight: bold; letter-spacing: 5px; 
+            text-shadow: 0 0 15px rgba(0, 242, 254, 0.6); pointer-events: none; z-index: 20; 
+            padding: 0 150px; 
+        }
+        
+        /* 強制將按鈕固定於右上方，並加上 !important 防覆蓋 */
         .nav-to-exchange { 
-            position: absolute; top: 20px; right: 30px; 
-            background: #222; border: 1px solid var(--accent-blue); 
-            color: var(--accent-blue); font-size: 1.2em; padding: 10px 20px; 
+            position: absolute !important; top: 20px !important; right: 20px !important; bottom: auto !important;
+            background: rgba(0,0,0,0.8) !important; border: 2px solid var(--accent-blue) !important; 
+            color: var(--accent-blue) !important; font-size: 1.2rem !important; padding: 10px 20px !important; 
             cursor: pointer; border-radius: 8px; transition: all 0.3s ease; 
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); z-index: 20; font-weight: bold; 
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.4); z-index: 100; font-weight: bold; 
         }
         .nav-to-exchange:hover { 
-            background: var(--accent-blue); color: #000; 
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.6); transform: scale(1.05); 
+            background: var(--accent-blue) !important; color: #000 !important; 
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.6) !important; transform: scale(1.05); 
+        }
+        
+        @media (max-width: 768px) {
+            #titleOverlay { font-size: 1.3rem; padding: 0 120px; top: 20px; }
+            .nav-to-exchange { font-size: 1rem !important; padding: 8px 12px !important; top: 15px !important; right: 15px !important; }
         }
 
         /* ==========================================
@@ -723,7 +727,7 @@ function importGame(event) {
 }
 
 // ==========================================
-// 3. 時代頭條 (News View Logic)
+// 3. 時代頭條 (News View Logic) - 防跑版動態縮放
 // ==========================================
 let newsAnimReq;
 const newsCanvas = document.getElementById('newsCanvas');
@@ -787,12 +791,14 @@ function animateNews() {
     newsCtx.fillStyle = 'rgba(255, 255, 255, 0.06)'; newsCtx.font = 'bold 35vw monospace'; newsCtx.textAlign = 'center'; newsCtx.textBaseline = 'middle';
     newsCtx.fillText(displayYear, nw / 2, nh / 2 + 50);
 
-    const baseFontSize = Math.max(26, Math.floor(nh * 0.045));
-    const titleFontSize = Math.floor(baseFontSize * 1.6);
+    // 💡 智慧動態計算字體與行距，確保平板橫向高度足夠
+    const baseFontSize = Math.min(Math.max(16, Math.floor(nh * 0.035)), Math.floor(nw * 0.03));
+    const titleFontSize = Math.floor(baseFontSize * 1.5);
     
     newsCtx.fillStyle = '#ffcc00'; newsCtx.font = `bold ${titleFontSize}px "Noto Sans TC"`; newsCtx.textAlign = 'center'; newsCtx.textBaseline = 'top';
     newsCtx.shadowColor = 'rgba(255, 204, 0, 0.8)'; newsCtx.shadowBlur = 15;
-    newsCtx.fillText(`【 ${displayYear} 年 】`, nw / 2, nh * 0.12); newsCtx.shadowBlur = 0;
+    newsCtx.fillText(`【 ${displayYear} 年 】`, nw / 2, Math.max(60, nh * 0.12)); 
+    newsCtx.shadowBlur = 0;
 
     newsCtx.textAlign = 'left';
     const items = newsData[displayYear] || ["今年全球平靜無波，市場等待新契機。"];
@@ -801,19 +807,21 @@ function animateNews() {
     if (isTyping) { charIndex += 3; if (charIndex >= allText.length) { charIndex = allText.length; isTyping = false; } }
 
     const blocks = allText.substring(0, Math.floor(charIndex)).split("\n\n");
-    let startY = nh * 0.28; 
-    const maxW = nw * 0.75; 
-    const startX = nw * 0.15; 
+    
+    // 💡 起始高度往上拉，寬度放寬，減少行數
+    let startY = Math.max(120, nh * 0.22); 
+    const maxW = nw * 0.85; 
+    const startX = nw * 0.075; 
     const lineHeight = baseFontSize * 1.5;
 
     newsCtx.font = `bold ${baseFontSize}px "Noto Sans TC"`; newsCtx.fillStyle = '#ffffff'; newsCtx.shadowColor = '#00f2fe'; newsCtx.shadowBlur = 8;
     blocks.forEach(block => {
         if(block.length > 0) {
             newsCtx.fillStyle = '#ffcc00'; 
-            newsCtx.fillText("▶", startX - (baseFontSize * 1.2), startY);
+            newsCtx.fillText("▶", startX, startY);
             newsCtx.fillStyle = '#ffffff'; 
-            startY = wrapText(newsCtx, block, startX, startY, maxW, lineHeight); 
-            startY += baseFontSize; 
+            startY = wrapText(newsCtx, block, startX + (baseFontSize * 1.5), startY, maxW - (baseFontSize * 1.5), lineHeight); 
+            startY += baseFontSize * 0.8; 
         }
     });
     newsCtx.shadowBlur = 0;
