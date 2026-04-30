@@ -18,12 +18,12 @@
         .view.active { display: flex; }
         
         /* ==========================================
-           1. 設定畫面 (Setup View) - 優化響應式排版
+           1. 設定畫面 (Setup View) - 優化響應式排版與防跑版
            ========================================== */
         #view-setup { 
             background: radial-gradient(circle at center, #110022 0%, #020202 100%); 
-            flex-direction: column; align-items: center; justify-content: center; z-index: 600; 
-            padding: 20px; overflow-y: auto; 
+            flex-direction: column; align-items: center; justify-content: flex-start; z-index: 600; 
+            padding: 40px 20px; overflow-y: auto; 
         }
         .setup-box { 
             background: rgba(10, 5, 20, 0.85); 
@@ -33,7 +33,7 @@
             box-shadow: 0 0 20px var(--accent-blue), inset 0 0 20px var(--accent-blue); 
             animation: neonBoxPulse 4s infinite alternate; backdrop-filter: blur(5px); 
             margin: auto; 
-            max-height: 100%; overflow-y: auto; 
+            flex-shrink: 0; /* 關鍵：防止平板/手機上因高度不足導致按鈕被壓縮變形 */
         }
         .setup-box::-webkit-scrollbar { width: 6px; }
         .setup-box::-webkit-scrollbar-track { background: transparent; }
@@ -90,6 +90,17 @@
 
         .btn-enter-market { width: 100%; padding: 12px; margin-top: 15px; background: transparent; color: #fff; font-weight: bold; font-size: 1.4em; letter-spacing: 2px; border-radius: 10px; cursor: pointer; border: 2px solid #ff3b30; box-shadow: 0 0 15px #ff3b30, 0 0 30px #ff3b30, inset 0 0 15px #ff3b30; text-shadow: 0 0 10px #fff, 0 0 20px #ff3b30; animation: alertPulse 1s infinite alternate; }
         @keyframes alertPulse { 0% { box-shadow: 0 0 15px #ff3b30, inset 0 0 15px #ff3b30; transform: scale(1); } 100% { box-shadow: 0 0 30px #ff3b30, 0 0 50px #ff3b30, inset 0 0 30px #ff3b30; transform: scale(1.03); border-color: #fff; text-shadow: 0 0 15px #fff, 0 0 30px #ff3b30; } }
+
+        /* 針對平板/手機的優化 */
+        @media (max-width: 768px) {
+            #view-setup { padding: 20px 10px; }
+            .setup-box { padding: 20px 15px; }
+            .setup-title { font-size: 1.8em; margin-bottom: 10px; }
+            .highlight-yi { font-size: 1.3em; }
+            .opt-btn { font-size: 0.85em; padding: 6px 8px; }
+            .setup-row { font-size: 1em; margin-bottom: 8px; padding-bottom: 8px; }
+            .btn-enter-market { font-size: 1.2em; padding: 12px; margin-top: 15px; }
+        }
 
         /* ==========================================
            2. 時代頭條 (News View)
