@@ -17,7 +17,10 @@
         body { 
             font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif; 
             background: var(--bg-deep); color: #fff; margin: 0; 
-            display: flex; height: 100vh; overflow: hidden; 
+            display: flex; 
+            height: 100vh; /* 舊版瀏覽器備用 */
+            height: 100dvh; /* 💡 關鍵：動態螢幕高度，閃避 Safari 底部工具列 */
+            overflow: hidden; 
             position: fixed; width: 100%; 
         }
         
@@ -159,7 +162,14 @@
         #boardView { flex: 1; display: flex; flex-direction: column; position: relative; }
         .header { display: flex; justify-content: space-between; align-items: center; padding: 0 25px; background: #000; height: 70px; border-bottom: 2px solid #333; }
         #yearLabel { color: var(--accent-gold); font-size: 2.2vw; font-weight: bold; }
-        #stockList { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(4, 1fr); gap: 8px; padding: 10px; } /* Demo版調整為4行 */
+        #stockList { 
+            flex: 1; display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            grid-template-rows: repeat(4, minmax(110px, 1fr)); /* 保障最小高度 */
+            gap: 8px; padding: 10px; 
+            overflow-y: auto; /* 💡 關鍵：當螢幕不夠高時，允許 G 和 H 可以滑動出來 */
+            min-height: 0;
+        } /* Demo版調整為4行 */
         .stock-row { display: flex; align-items: center; background: var(--bg-row); padding: 0 15px; border-radius: 10px; border-left: 8px solid #222; cursor: pointer; height: 100%; transition: 0.2s; }
         .stock-row.selected { border: 2px solid white; box-shadow: inset 0 0 15px rgba(255,255,255,0.1); }
         .s-id { font-size: 2vw; font-weight: bold; width: 45px; color: var(--accent-blue); }
@@ -206,7 +216,17 @@
         .red { color: var(--up) !important; } .green { color: var(--down) !important; }
 
         /* 浮動交易面板 */
-        #floatingTradePanel { position: absolute; bottom: 20px; width: 420px; background: rgba(10, 10, 10, 0.95); border: 2px solid var(--accent-gold); border-radius: 12px; padding: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); z-index: 200; display: none; flex-direction: column; backdrop-filter: blur(10px); transition: left 0.3s, right 0.3s; }
+        #floatingTradePanel { 
+            position: absolute; bottom: 20px; width: 420px; 
+            background: rgba(10, 10, 10, 0.95); 
+            border: 2px solid var(--accent-gold); border-radius: 12px; 
+            padding: 20px; /* 稍微縮小內距，爭取空間 */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.9); z-index: 200; display: none; 
+            flex-direction: column; backdrop-filter: blur(10px); 
+            transition: left 0.3s, right 0.3s; 
+            max-height: 85dvh; /* 💡 關鍵：限制最大高度，防止按鈕掉出螢幕 */
+            overflow-y: auto; /* 💡 關鍵：如果面板太擠，允許內部滑動 */
+        }
         .t-head { display: flex; justify-content: space-between; align-items: center; font-size: 1.6em; font-weight: bold; margin-bottom: 8px; }
         .t-head .sid-span { color: var(--accent-blue); font-size: 1.2em; margin-left: 5px; }
         .t-close { cursor: pointer; color: #888; font-size: 1.3em; transition: 0.2s; }
